@@ -133,14 +133,11 @@ class NimAI():
         `state`, return 0.
         """
         possible_actions = Nim.available_actions(state)
-        print("possible_actions: ", possible_actions)
-        # TODO: need to use max of highest q-values
-
         best_future_reward_value = 0
-        for i in range(len(possible_actions)):
-            if self.q[(tuple(state), possible_actions[i])] > best_future_reward_value:
-                best_future_reward_value = self.q[(tuple(state), possible_actions[i])]
-        print("best_future_reward_value: ", best_future_reward_value)
+        for action in possible_actions:
+            q_value = self.get_q_value(state, action)
+            if q_value > best_future_reward_value:
+                best_future_reward_value = q_value
         return best_future_reward_value
 
 
@@ -159,9 +156,19 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
-        # TODO: have to get the available actions using method above
-        # TODO: random.choice to select random action when appropriate else choose *best* action
-        raise NotImplementedError
+        possible_actions = Nim.available_actions(state)
+        best_action = None
+        best_action_q_value = 0
+        for action in possible_actions:
+            q_value = self.get_q_value(state, action)
+            if best_action is None or q_value > best_action_q_value:
+                best_action = action
+                best_action_q_value = q_value
+        
+        # If epsilon is false or a random number between 0.0 and 1.0 is greater-than epsilon, return the *best* action.
+        if not epsilon or random.random() > self.epsilon:
+            return best_action
+        return random.choice(list(possible_actions))
 
 
 def train(n):
