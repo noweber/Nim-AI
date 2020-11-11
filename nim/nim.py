@@ -132,7 +132,10 @@ class NimAI():
         Q-value in `self.q`. If there are no available actions in
         `state`, return 0.
         """
+        # Get the list of all possible actions within this state:
         possible_actions = Nim.available_actions(state)
+
+        # Iterate through possible actions and return the highest Q-value as *best*, setting default value to 0 in case of no possible actions:
         best_future_reward_value = 0
         for action in possible_actions:
             q_value = self.get_q_value(state, action)
@@ -156,7 +159,10 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
+        # Get the list of all possible actions within this state:
         possible_actions = Nim.available_actions(state)
+
+        # Iterate through possible actions and keep the action with the highest Q-value as *best*:
         best_action = None
         best_action_q_value = 0
         for action in possible_actions:
